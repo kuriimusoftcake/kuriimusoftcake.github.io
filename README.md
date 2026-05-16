@@ -1,2 +1,0 @@
-# kuriimusoftcake.github.io
-portfolio

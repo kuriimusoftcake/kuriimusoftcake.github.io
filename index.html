@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kuriimusoftcake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0b0b0b;
+    --text: #e0ddd7;
+    --muted: #58554f;
+    --muted-light: #7a7670;
+    --faint: #161616;
+    --faint2: #1c1c1c;
+    --line: #1e1e1e;
+    --accent: #c8a97e;
+  }
+
+  html {
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    font-family: 'DM Mono', monospace;
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 5rem 2rem 9rem;
+  }
+
+  a { color: var(--text); text-underline-offset: 4px; transition: opacity 0.2s; }
+  a:hover { opacity: 0.5; }
+
+  .top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 3.5rem;
+  }
+
+  .top-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.2rem;
+  }
+
+  .top-role { color: var(--muted); font-size: 12px; letter-spacing: 0.04em; }
+
+  .top-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-top: 0.45rem;
+    flex-shrink: 0;
+  }
+
+  .sep { border: none; border-top: 1px solid var(--line); margin: 3rem 0; }
+
+  .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    margin-bottom: 1.75rem;
+  }
+
+  .bio {
+    font-size: 13px;
+    color: var(--muted-light);
+    line-height: 1.9;
+    max-width: 560px;
+  }
+
+  .projects { display: flex; flex-direction: column; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+
+  .project {
+    background: var(--bg);
+    padding: 1.75rem 2rem;
+    transition: background 0.2s;
+    cursor: default;
+  }
+
+  .project:hover { background: var(--faint); }
+
+  .project:hover .project-name { color: var(--accent); }
+
+  .project-name {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 0.6rem;
+    transition: color 0.2s;
+  }
+
+  .project-desc {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.85;
+    margin-bottom: 1rem;
+  }
+
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+
+  .tag {
+    font-size: 10.5px;
+    color: var(--muted);
+    background: var(--faint2);
+    padding: 2px 9px;
+    border-radius: 2px;
+    border: 1px solid var(--line);
+    transition: border-color 0.2s;
+  }
+
+  .project:hover .tag { border-color: #2a2a2a; }
+
+  .skills { display: flex; flex-direction: column; }
+
+  .skill-row {
+    display: grid;
+    grid-template-columns: 155px 1fr;
+    gap: 1.5rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 12.5px;
+  }
+
+  .skill-row:first-child { border-top: 1px solid var(--line); }
+  .skill-name { color: var(--text); }
+  .skill-detail { color: var(--muted); }
+
+  .contact {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--line);
+  }
+
+  .contact-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.9rem 1.25rem;
+    font-size: 13px;
+    color: var(--muted-light);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    transition: background 0.2s, color 0.2s;
+  }
+
+  .contact-link:last-child { border-bottom: none; }
+  .contact-link:hover { background: var(--faint); color: var(--text); }
+
+  .contact-link-arrow {
+    font-size: 11px;
+    color: var(--muted);
+    transition: color 0.2s;
+  }
+
+  .contact-link:hover .contact-link-arrow { color: var(--accent); }
+
+  @media (max-width: 500px) {
+    body { padding: 3rem 1.25rem 6rem; }
+    .skill-row { grid-template-columns: 1fr; gap: 0.2rem; }
+    .project { padding: 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div>
+    <div class="top-name">kuriimusoftcake</div>
+    <div class="top-role">Roblox Developer</div>
+  </div>
+  <div class="top-dot"></div>
+</div>
+
+<p class="bio">
+  I can script pretty well. I got examples below of what I've built so far and I'll keep adding more as I work on different projects. There's still stuff I don't fully know yet but I pick things up over time. Don't judge a book by its cover though — I'm a solid scripter. I've worked on games outside Roblox too so I know how Lua works beyond just the Roblox side of things. Still growing, but the work speaks for itself.
+</p>
+
+<hr class="sep">
+
+<div class="label">Stuff I did for fun</div>
+
+<div class="projects">
+
+  <div class="project">
+    <div class="project-name">Battlegrounds Game</div>
+    <p class="project-desc">
+      Built entirely by myself. Full combat engine with M1 combo chains, blocking, i-frames, ragdolls, hitbox validation on the server, stunlock, a skill system, a dash system. Everything is modular. Server handles all damage so nothing is exploitable from the client.
+    </p>
+    <div class="tags">
+      <span class="tag">CombatServer</span>
+      <span class="tag">HitboxService</span>
+      <span class="tag">IFrameService</span>
+      <span class="tag">RagdollService</span>
+      <span class="tag">StunlockService</span>
+      <span class="tag">SkillSystem</span>
+      <span class="tag">DashSystem</span>
+    </div>
+  </div>
+
+  <div class="project">
+    <div class="project-name">Tower Defense Template</div>
+    <p class="project-desc">
+      Built in two hours. Waypoint pathfinding for enemies, tower placement, an inventory with randomized tower drops, wave management. Wrote it clean with no plugins or shortcuts.
+    </p>
+    <div class="tags">
+      <span class="tag">Pathfinding</span>
+      <span class="tag">Tower Placement</span>
+      <span class="tag">Inventory</span>
+      <span class="tag">Wave Manager</span>
+    </div>
+  </div>
+
+  <div class="project">
+    <div class="project-name">Unstable Session</div>
+    <p class="project-desc">
+      Horror survival with a classic old Roblox look. Map rotation, objectives, stamina, quick-time events, a leaderboard with clickable player profile icons. View locks to first person when a round starts then snaps back to third person in the lobby.
+    </p>
+    <div class="tags">
+      <span class="tag">Map Rotation</span>
+      <span class="tag">Objective System</span>
+      <span class="tag">QTE</span>
+      <span class="tag">Stamina</span>
+      <span class="tag">View Lock</span>
+      <span class="tag">Leaderboard</span>
+    </div>
+  </div>
+
+  <div class="project">
+    <div class="project-name">DECAY</div>
+    <p class="project-desc">
+      Zombie survival. The AI doesn't just chase in a straight line — it covers angles and adjusts based on your position so flanking isn't easy. Crouch, prone, stamina, plus a noise-based awareness system that changes how zombies react to you.
+    </p>
+    <div class="tags">
+      <span class="tag">Zombie AI</span>
+      <span class="tag">Awareness System</span>
+      <span class="tag">Anti-Flank</span>
+      <span class="tag">Crouch / Prone</span>
+      <span class="tag">Stamina</span>
+    </div>
+  </div>
+
+</div>
+
+<hr class="sep">
+
+<div class="label">What I can build</div>
+
+<div class="skills">
+  <div class="skill-row">
+    <span class="skill-name">Combat systems</span>
+    <span class="skill-detail">Combos, blocking, i-frames, ragdolls, hitboxes, stunlock, skills</span>
+  </div>
+  <div class="skill-row">
+    <span class="skill-name">Server security</span>
+    <span class="skill-detail">Remote validation, anti-exploit, rate limiting, server-authoritative damage</span>
+  </div>
+  <div class="skill-row">
+    <span class="skill-name">AI and NPCs</span>
+    <span class="skill-detail">Pathfinding, awareness, flanking behavior, dynamic threat response</span>
+  </div>
+  <div class="skill-row">
+    <span class="skill-name">Game systems</span>
+    <span class="skill-detail">Objectives, map rotation, stamina, QTE, leaderboards, inventories</span>
+  </div>
+  <div class="skill-row">
+    <span class="skill-name">DataStore</span>
+    <span class="skill-detail">Save and load with retry logic, error handling, safe defaults</span>
+  </div>
+  <div class="skill-row">
+    <span class="skill-name">Full game dev</span>
+    <span class="skill-detail">I can own a project solo from architecture to shipping</span>
+  </div>
+</div>
+
+<hr class="sep">
+
+<div class="label">Contact</div>
+
+<div class="contact">
+  <a href="#" target="_blank" rel="noopener" class="contact-link">
+    <span>Discord</span>
+    <span class="contact-link-arrow">kuriimusoftcake ↗</span>
+  </a>
+  <a href="https://devforum.roblox.com" target="_blank" rel="noopener" class="contact-link">
+    <span>Roblox DevForum</span>
+    <span class="contact-link-arrow">↗</span>
+  </a>
+  <a href="https://roblox.com" target="_blank" rel="noopener" class="contact-link">
+    <span>Roblox Profile</span>
+    <span class="contact-link-arrow">↗</span>
+  </a>
+</div>
+
+</body>
+</html>
