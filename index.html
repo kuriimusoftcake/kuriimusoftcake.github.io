@@ -3,298 +3,1348 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portfolio</title>
+<title>nyeowie — Roblox Scripter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg: #0b0b0b;
-    --text: #e0ddd7;
-    --muted: #58554f;
-    --muted-light: #7a7670;
-    --faint: #161616;
-    --faint2: #1c1c1c;
-    --line: #1e1e1e;
-    --accent: #c8a97e;
-  }
+:root {
+  --bg: #080808;
+  --bg1: #0e0e0e;
+  --bg2: #141414;
+  --text: #e8e4dc;
+  --muted: #4a4742;
+  --muted2: #6b6760;
+  --line: #1a1a1a;
+  --line2: #222;
+  --accent: #c8a97e;
+  --accent2: #a07848;
+  --green: #4ade80;
+  --red: #f87171;
+}
 
-  html {
-    background: var(--bg);
-    color: var(--text);
-    font-size: 14px;
-    line-height: 1.75;
-    -webkit-font-smoothing: antialiased;
-  }
+html { background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
 
-  body {
-    font-family: 'DM Mono', monospace;
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 6rem 2rem 9rem;
-  }
+body {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  line-height: 1.75;
+  overflow-x: hidden;
+}
 
-  a { color: var(--text); text-underline-offset: 4px; transition: opacity 0.2s; }
-  a:hover { opacity: 0.5; }
+.view {
+  min-height: 100vh;
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1), transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(18px);
+}
 
-  .hero {
-    text-align: center;
-    margin-bottom: 5rem;
-  }
+.view.active {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0);
+  position: relative;
+}
 
-  .hero-title {
-    font-family: 'DM Sans', sans-serif;
-    font-size: clamp(2.8rem, 8vw, 4.5rem);
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: -0.03em;
-    line-height: 1;
-    margin-bottom: 1.25rem;
-  }
+.view.exit-up {
+  opacity: 0;
+  transform: translateY(-18px);
+  pointer-events: none;
+  position: absolute;
+}
 
-  .hero-sub {
-    font-size: 12px;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
+.view.exit-down {
+  opacity: 0;
+  transform: translateY(18px);
+  pointer-events: none;
+  position: absolute;
+}
 
-  .sep { border: none; border-top: 1px solid var(--line); margin: 3rem 0; }
+/* ──────────────────────────────────── INTRO */
 
-  .label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--muted);
-    margin-bottom: 1.75rem;
-  }
+#view-intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 4rem 1.5rem 6rem;
+}
 
-  .bio {
-    font-size: 13px;
-    color: var(--muted-light);
-    line-height: 1.9;
-  }
+.intro-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 3rem;
+  opacity: 0;
+  animation: fadeSlideUp 0.6s 0.2s forwards;
+}
 
-  .projects { display: flex; flex-direction: column; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.intro-heading {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.4rem, 7vw, 4.2rem);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  animation: fadeSlideUp 0.6s 0.4s forwards;
+}
 
-  .project {
-    background: var(--bg);
-    padding: 1.75rem 2rem;
-    transition: background 0.2s;
-    cursor: default;
-  }
+.intro-heading span { color: var(--accent); }
 
-  .project:hover { background: var(--faint); }
-  .project:hover .project-name { color: var(--accent); }
+.intro-sub {
+  font-size: 12px;
+  color: var(--muted2);
+  text-align: center;
+  margin-bottom: 4rem;
+  opacity: 0;
+  animation: fadeSlideUp 0.6s 0.6s forwards;
+}
 
-  .project-name {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 0.6rem;
-    transition: color 0.2s;
-  }
+.q-grid {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
-  .project-desc {
-    font-size: 12.5px;
-    color: var(--muted);
-    line-height: 1.85;
-    margin-bottom: 1rem;
-  }
+.q-card {
+  background: var(--bg1);
+  border: 1px solid var(--line2);
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  opacity: 0;
+  animation: fadeSlideUp 0.5s forwards;
+  position: relative;
+  overflow: hidden;
+}
 
-  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.q-card::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-  .tag {
-    font-size: 10.5px;
-    color: var(--muted);
-    background: var(--faint2);
-    padding: 2px 9px;
-    border-radius: 2px;
-    border: 1px solid var(--line);
-    transition: border-color 0.2s;
-  }
+.q-card:hover::after { transform: scaleY(1); }
+.q-card:hover { background: var(--bg2); border-color: #2a2a2a; transform: translateX(3px); }
+.q-card:active { transform: translateX(3px) scale(0.995); }
 
-  .project:hover .tag { border-color: #2a2a2a; }
+.q-icon {
+  font-size: 11px;
+  color: var(--accent);
+  margin-top: 3px;
+  font-family: 'DM Mono', monospace;
+  flex-shrink: 0;
+  letter-spacing: 0;
+}
 
-  .skills { display: flex; flex-direction: column; }
+.q-text { flex: 1; }
+.q-main {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.4;
+  margin-bottom: 3px;
+}
+.q-sub { font-size: 11px; color: var(--muted2); }
 
-  .skill-row {
-    display: grid;
-    grid-template-columns: 155px 1fr;
-    gap: 1.5rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--line);
-    font-size: 12.5px;
-  }
+.q-arrow {
+  font-size: 11px;
+  color: var(--muted);
+  align-self: center;
+  transition: color 0.2s, transform 0.2s;
+  flex-shrink: 0;
+}
 
-  .skill-row:first-child { border-top: 1px solid var(--line); }
-  .skill-name { color: var(--text); }
-  .skill-detail { color: var(--muted); }
+.q-card:hover .q-arrow { color: var(--accent); transform: translateX(3px); }
 
-  .contact {
-    display: flex;
-    flex-direction: column;
-    border: 1px solid var(--line);
-  }
+/* ──────────────────────────────────── RESULTS */
 
-  .contact-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.9rem 1.25rem;
-    font-size: 13px;
-    color: var(--muted-light);
-    text-decoration: none;
-    border-bottom: 1px solid var(--line);
-    transition: background 0.2s, color 0.2s;
-  }
+#view-results {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 6rem;
+}
 
-  .contact-link:last-child { border-bottom: none; }
-  .contact-link:hover { background: var(--faint); color: var(--text); }
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--muted2);
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0;
+  margin-bottom: 3.5rem;
+  transition: color 0.2s;
+}
+.back-btn:hover { color: var(--text); }
+.back-btn span { font-size: 14px; }
 
-  .contact-link-arrow {
-    font-size: 11px;
-    color: var(--muted);
-    transition: color 0.2s;
-  }
+.results-label {
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
 
-  .contact-link:hover .contact-link-arrow { color: var(--accent); }
+.results-heading {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+}
 
-  @media (max-width: 500px) {
-    body { padding: 4rem 1.25rem 6rem; }
-    .skill-row { grid-template-columns: 1fr; gap: 0.2rem; }
-    .project { padding: 1.5rem; }
-  }
+.results-heading .hl { color: var(--accent); }
+
+.results-sub {
+  font-size: 12px;
+  color: var(--muted2);
+  margin-bottom: 3rem;
+  max-width: 500px;
+}
+
+.proj-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.proj-card {
+  background: var(--bg);
+  padding: 2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.proj-card:hover { background: var(--bg1); }
+.proj-card:hover .proj-name { color: var(--accent); }
+
+.proj-num {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+.proj-visual {
+  width: 100%;
+  height: 120px;
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  letter-spacing: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.proj-visual-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.proj-visual-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  background-size: 20px 20px;
+  background-image: repeating-linear-gradient(
+    0deg, var(--text) 0px, var(--text) 1px, transparent 1px, transparent 20px
+  ),
+  repeating-linear-gradient(
+    90deg, var(--text) 0px, var(--text) 1px, transparent 1px, transparent 20px
+  );
+}
+
+.proj-glyph {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  z-index: 1;
+}
+
+.proj-name {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+  transition: color 0.2s;
+}
+
+.proj-desc {
+  font-size: 11.5px;
+  color: var(--muted2);
+  line-height: 1.85;
+  margin-bottom: 1.25rem;
+}
+
+.proj-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.proj-tag {
+  font-size: 10px;
+  color: var(--muted);
+  border: 1px solid var(--line2);
+  background: var(--bg2);
+  padding: 2px 8px;
+}
+
+.proj-card-arrow {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  font-size: 11px;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+
+.proj-card:hover .proj-card-arrow { color: var(--accent); }
+
+/* ──────────────────────────────────── DETAIL */
+
+#view-detail {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 8rem;
+}
+
+.detail-hero {
+  width: 100%;
+  height: 280px;
+  background: var(--bg1);
+  border: 1px solid var(--line2);
+  margin-bottom: 2.5rem;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-hero-bg {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-size: 30px 30px;
+  background-image: repeating-linear-gradient(
+    0deg, var(--text) 0, var(--text) 1px, transparent 1px, transparent 30px
+  ),
+  repeating-linear-gradient(
+    90deg, var(--text) 0, var(--text) 1px, transparent 1px, transparent 30px
+  );
+}
+
+.detail-hero-label {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.04em;
+  opacity: 0.08;
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+}
+
+.detail-hero-glyph {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  z-index: 1;
+  text-align: center;
+  line-height: 2;
+}
+
+.detail-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 1.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.detail-name {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+.detail-built-by {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.detail-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 640px) { .detail-body { grid-template-columns: 1fr; } }
+
+.detail-section-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.detail-desc {
+  font-size: 12.5px;
+  color: var(--muted2);
+  line-height: 1.9;
+}
+
+.detail-systems { display: flex; flex-direction: column; gap: 6px; }
+
+.sys-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--muted2);
+  padding: 6px 10px;
+  background: var(--bg1);
+  border: 1px solid var(--line);
+}
+
+.sys-dot {
+  width: 5px; height: 5px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+
+.code-block-wrap { margin-bottom: 2.5rem; }
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg2);
+  border: 1px solid var(--line2);
+  border-bottom: 1px solid var(--line);
+  padding: 8px 1rem;
+}
+
+.code-filename {
+  font-size: 11px;
+  color: var(--muted2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.code-dot { width: 7px; height: 7px; background: var(--accent); }
+
+.code-lang {
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+pre {
+  background: var(--bg1);
+  border: 1px solid var(--line2);
+  border-top: none;
+  padding: 1.5rem;
+  overflow-x: auto;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  line-height: 1.8;
+  color: var(--muted2);
+}
+
+.ck { color: #6b8cba; }
+.cs { color: #87a96b; }
+.cm { color: var(--muted); font-style: italic; }
+.cf { color: #c8a97e; }
+.cn { color: #d4a0d4; }
+.co { color: #e0ddd7; }
+
+/* ──────────────────────────────────── ABOUT */
+
+#view-about {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem 8rem;
+}
+
+.about-header { margin-bottom: 4rem; }
+
+.about-label {
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.about-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+}
+
+.about-title .hl { color: var(--accent); }
+
+.about-tagline {
+  font-size: 12.5px;
+  color: var(--muted2);
+  max-width: 500px;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 600px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+
+.stat-box {
+  background: var(--bg);
+  padding: 1.5rem;
+  text-align: left;
+}
+
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin-bottom: 0.4rem;
+}
+
+.stat-num .accent { color: var(--accent); }
+.stat-label { font-size: 11px; color: var(--muted); }
+
+.tbar-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+}
+.tbar-dot.r { background: #f87171; }
+.tbar-dot.y { background: #fbbf24; }
+.tbar-dot.g { background: #4ade80; }
+
+.t-line { display: flex; gap: 10px; }
+.t-prompt { color: var(--accent); flex-shrink: 0; }
+.t-cmd { color: var(--text); }
+.t-out { color: var(--muted2); padding-left: 20px; }
+.t-cursor {
+  display: inline-block;
+  width: 7px; height: 14px;
+  background: var(--accent);
+  vertical-align: middle;
+  animation: blink 1.1s step-end infinite;
+  margin-left: 2px;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 600px) { .about-grid { grid-template-columns: 1fr; } }
+
+.about-block-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.philo-list { display: flex; flex-direction: column; gap: 10px; }
+
+.philo-item {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--muted2);
+  line-height: 1.7;
+  padding: 10px 12px;
+  background: var(--bg1);
+  border: 1px solid var(--line);
+}
+
+.philo-accent {
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.skill-table { display: flex; flex-direction: column; }
+
+.skill-row-a {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 12px;
+}
+
+.skill-row-a:first-child { border-top: 1px solid var(--line); }
+.sk-name { color: var(--text); }
+.sk-detail { color: var(--muted2); }
+
+.about-projects-link {
+  background: var(--bg1);
+  border: 1px solid var(--line2);
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 3rem;
+}
+
+.about-projects-link:hover { background: var(--bg2); }
+
+.apl-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.apl-sub { font-size: 11px; color: var(--muted); }
+.apl-arrow { font-size: 16px; color: var(--muted2); transition: color 0.2s; }
+.about-projects-link:hover .apl-arrow { color: var(--accent); }
+
+/* ──────────────────────────────────── ANIMATIONS */
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stagger-1 { animation-delay: 0.85s; }
+.stagger-2 { animation-delay: 1.0s; }
+.stagger-3 { animation-delay: 1.15s; }
+.stagger-4 { animation-delay: 1.3s; }
+.stagger-5 { animation-delay: 1.45s; }
+.stagger-6 { animation-delay: 1.6s; }
+
+.fade-in {
+  opacity: 0;
+  animation: fadeSlideUp 0.5s forwards;
+}
+
+.sep {
+  border: none;
+  border-top: 1px solid var(--line);
+  margin: 2.5rem 0;
+}
+
+a { color: var(--text); text-underline-offset: 4px; }
+
+@media (max-width: 480px) {
+  .q-card { padding: 1rem; }
+  .q-main { font-size: 13px; }
+}
+
+.nav-dots {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.nav-dots.visible { opacity: 1; }
+.nav-dot {
+  width: 5px; height: 5px;
+  background: var(--muted);
+  cursor: pointer;
+  transition: background 0.2s, width 0.3s;
+}
+.nav-dot.active { background: var(--accent); width: 18px; }
+
+.contact-row {
+  display: flex;
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-top: 2.5rem;
+}
+
+.contact-btn {
+  flex: 1;
+  background: var(--bg);
+  padding: 0.9rem;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted2);
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer;
+}
+
+.contact-btn:hover { background: var(--bg2); color: var(--text); }
 </style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="hero-title">Portfolio</div>
-  <div class="hero-sub">Here you can find everything I did so far</div>
+<div class="nav-dots" id="navDots">
+  <div class="nav-dot active" data-view="intro" title="Home"></div>
+  <div class="nav-dot" data-view="results" title="Projects"></div>
+  <div class="nav-dot" data-view="about" title="About"></div>
 </div>
 
-<p class="bio">
-  I can script pretty well. I got examples below of what I've built so far and I'll keep adding more as I work on different projects. There's still stuff I don't fully know yet but I pick things up over time. Don't judge a book by its cover though. I'm a solid scripter. I've worked on games outside Roblox too so I know how Lua works beyond just the Roblox side of things. Still growing, but the work speaks for itself.
-</p>
+<div class="view active" id="view-intro">
+  <div class="intro-eyebrow">nyeowie / roblox scripter</div>
+  <div class="intro-heading">Hey there, <span>what are<br>you looking for?</span></div>
+  <div class="intro-sub">Pick the option that fits your situation — I'll show you relevant work.</div>
 
-<hr class="sep">
-
-<div class="label">Stuff I did for fun</div>
-
-<div class="projects">
-
-  <div class="project">
-    <div class="project-name">Battlegrounds Game</div>
-    <p class="project-desc">
-      Built entirely by myself. Full combat engine with M1 combo chains, blocking, i-frames, ragdolls, hitbox validation on the server, stunlock, a skill system, a dash system. Everything is modular. Server handles all damage so nothing is exploitable from the client.
-    </p>
-    <div class="tags">
-      <span class="tag">CombatServer</span>
-      <span class="tag">HitboxService</span>
-      <span class="tag">IFrameService</span>
-      <span class="tag">RagdollService</span>
-      <span class="tag">StunlockService</span>
-      <span class="tag">SkillSystem</span>
-      <span class="tag">DashSystem</span>
+  <div class="q-grid" id="qGrid">
+    <div class="q-card stagger-1" data-intent="debug">
+      <div class="q-icon">→</div>
+      <div class="q-text">
+        <div class="q-main">I need someone to debug and fix broken code in my game</div>
+        <div class="q-sub">Bug hunting · Code audits · Refactoring messy scripts</div>
+      </div>
+      <div class="q-arrow">↗</div>
     </div>
-  </div>
 
-  <div class="project">
-    <div class="project-name">Tower Defense Template</div>
-    <p class="project-desc">
-      Built in two hours. Waypoint pathfinding for enemies, tower placement, an inventory with randomized tower drops, wave management. Wrote it clean with no plugins or shortcuts.
-    </p>
-    <div class="tags">
-      <span class="tag">Pathfinding</span>
-      <span class="tag">Tower Placement</span>
-      <span class="tag">Inventory</span>
-      <span class="tag">Wave Manager</span>
+    <div class="q-card stagger-2" data-intent="backend">
+      <div class="q-icon">→</div>
+      <div class="q-text">
+        <div class="q-main">I need a professional scripter for backend and server systems</div>
+        <div class="q-sub">RemoteEvents · DataStore · Server authority · Rate limiting</div>
+      </div>
+      <div class="q-arrow">↗</div>
     </div>
-  </div>
 
-  <div class="project">
-    <div class="project-name">Unstable Session</div>
-    <p class="project-desc">
-      Horror survival with a classic old Roblox look. Map rotation, objectives, stamina, quick-time events, a leaderboard with clickable player profile icons. View locks to first person when a round starts then snaps back to third person in the lobby.
-    </p>
-    <div class="tags">
-      <span class="tag">Map Rotation</span>
-      <span class="tag">Objective System</span>
-      <span class="tag">QTE</span>
-      <span class="tag">Stamina</span>
-      <span class="tag">View Lock</span>
-      <span class="tag">Leaderboard</span>
+    <div class="q-card stagger-3" data-intent="expand">
+      <div class="q-icon">→</div>
+      <div class="q-text">
+        <div class="q-main">I need someone to expand or add features to systems I already have</div>
+        <div class="q-sub">Extending existing code · New mechanics · Optimization passes</div>
+      </div>
+      <div class="q-arrow">↗</div>
     </div>
-  </div>
 
-  <div class="project">
-    <div class="project-name">DECAY</div>
-    <p class="project-desc">
-      Zombie survival. The AI doesn't just chase in a straight line. It covers angles and adjusts based on your position so flanking isn't easy. Crouch, prone, stamina, plus a noise-based awareness system that changes how zombies react to you.
-    </p>
-    <div class="tags">
-      <span class="tag">Zombie AI</span>
-      <span class="tag">Awareness System</span>
-      <span class="tag">Anti-Flank</span>
-      <span class="tag">Crouch / Prone</span>
-      <span class="tag">Stamina</span>
+    <div class="q-card stagger-4" data-intent="combat">
+      <div class="q-icon">→</div>
+      <div class="q-text">
+        <div class="q-main">I need combat, movement, or skill systems built from scratch</div>
+        <div class="q-sub">Combos · Dashing · I-frames · Hitboxes · Ragdolls · Stunlock</div>
+      </div>
+      <div class="q-arrow">↗</div>
     </div>
-  </div>
 
-</div>
+    <div class="q-card stagger-5" data-intent="ai">
+      <div class="q-icon">→</div>
+      <div class="q-text">
+        <div class="q-main">I need smart NPC or AI behavior for my game</div>
+        <div class="q-sub">Pathfinding · Awareness systems · Flanking · Dynamic responses</div>
+      </div>
+      <div class="q-arrow">↗</div>
+    </div>
 
-<hr class="sep">
-
-<div class="label">What I can help with</div>
-
-<div class="skills">
-  <div class="skill-row">
-    <span class="skill-name">Movement systems</span>
-    <span class="skill-detail">Dashing, double jump, momentum, sliding, vaulting, custom animations</span>
-  </div>
-  <div class="skill-row">
-    <span class="skill-name">Combat systems</span>
-    <span class="skill-detail">Combos, blocking, i-frames, ragdolls, hitboxes, stunlock, skills</span>
-  </div>
-  <div class="skill-row">
-    <span class="skill-name">Server security</span>
-    <span class="skill-detail">Remote validation, anti-exploit, rate limiting, server-authoritative damage</span>
-  </div>
-  <div class="skill-row">
-    <span class="skill-name">AI and NPCs</span>
-    <span class="skill-detail">Pathfinding, awareness, flanking behavior, dynamic threat response</span>
-  </div>
-  <div class="skill-row">
-    <span class="skill-name">Game systems</span>
-    <span class="skill-detail">Objectives, map rotation, stamina, QTE, leaderboards, inventories</span>
-  </div>
-  <div class="skill-row">
-    <span class="skill-name">DataStore</span>
-    <span class="skill-detail">Save and load with retry logic, error handling, safe defaults</span>
-  </div>
-  <div class="skill-row">
-    <span class="skill-name">Team projects</span>
-    <span class="skill-detail">I handle the scripting side. others cover VFX, UI, modeling. I make sure the code works</span>
+    <div class="q-card stagger-6" data-intent="all">
+      <div class="q-icon">→</div>
+      <div class="q-text">
+        <div class="q-main">I'm just here to see what you're fully capable of</div>
+        <div class="q-sub">Full showcase · Experience · Code philosophy · 6 years programming</div>
+      </div>
+      <div class="q-arrow">↗</div>
+    </div>
   </div>
 </div>
 
-<hr class="sep">
-
-<div class="label">Contact</div>
-
-<div class="contact">
-  <a href="#" target="_blank" rel="noopener" class="contact-link">
-    <span>Discord</span>
-    <span class="contact-link-arrow">nyeowie ↗</span>
-  </a>
-  <a href="https://www.roblox.com/users/1608393063/profile" target="_blank" rel="noopener" class="contact-link">
-    <span>Roblox Profile</span>
-    <span class="contact-link-arrow">↗</span>
-  </a>
+<div class="view" id="view-results">
+  <button class="back-btn" id="resultsBack"><span>←</span> back</button>
+  <div class="results-label" id="resultsLabel">Relevant work</div>
+  <div class="results-heading" id="resultsHeading">I've made similar <span class="hl">systems</span> to what<br>you're after. Check these out.</div>
+  <div class="results-sub" id="resultsSub">Click any project to see a full breakdown, code samples, and system architecture.</div>
+  <div class="proj-grid" id="projGrid"></div>
+  <div class="contact-row" style="max-width:900px;margin-top:2.5rem;">
+    <a href="#" class="contact-btn">Discord — nyeowie</a>
+    <a href="https://www.roblox.com/users/1608393063/profile" target="_blank" class="contact-btn">Roblox Profile ↗</a>
+  </div>
 </div>
 
+<div class="view" id="view-detail">
+  <button class="back-btn" id="detailBack"><span>←</span> back to results</button>
+
+  <div class="detail-hero" id="detailHero">
+    <div class="detail-hero-bg"></div>
+    <div class="detail-hero-label" id="detailHeroLabel"></div>
+    <div class="detail-hero-glyph" id="detailHeroGlyph"></div>
+  </div>
+
+  <div class="detail-meta">
+    <div class="detail-name" id="detailName"></div>
+    <div class="detail-built-by">built solo</div>
+  </div>
+
+  <div class="detail-body">
+    <div>
+      <div class="detail-section-label">About this project</div>
+      <div class="detail-desc" id="detailDesc"></div>
+    </div>
+    <div>
+      <div class="detail-section-label">Systems built</div>
+      <div class="detail-systems" id="detailSystems"></div>
+    </div>
+  </div>
+
+  <div class="code-block-wrap">
+    <div class="detail-section-label" style="margin-bottom:1rem;">Code sample</div>
+    <div class="code-header">
+      <div class="code-filename">
+        <div class="code-dot"></div>
+        <span id="codeFilename">Service.lua</span>
+      </div>
+      <div class="code-lang">luau</div>
+    </div>
+    <pre id="codeBlock"></pre>
+  </div>
+</div>
+
+<div class="view" id="view-about">
+  <button class="back-btn" id="aboutBack"><span>←</span> back</button>
+
+  <div class="about-header">
+    <div class="about-label">Full capability showcase</div>
+    <div class="about-title">6 years of code.<br><span class="hl">Zero shortcuts.</span></div>
+    <div class="about-tagline">
+      I started programming in 2020. Roblox is one of several platforms I've shipped on.
+      Everything I build is modular, server-authoritative, and clean enough that someone else can read it.
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-box">
+      <div class="stat-num">6<span class="accent">+</span></div>
+      <div class="stat-label">years programming</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">1<span class="accent">+</span></div>
+      <div class="stat-label">years on Roblox</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">4<span class="accent">+</span></div>
+      <div class="stat-label">games shipped</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">0</div>
+      <div class="stat-label">plugins or shortcuts</div>
+    </div>
+  </div>
+
+  <div class="about-grid">
+    <div>
+      <div class="about-block-label">How I approach code</div>
+      <div class="philo-list">
+        <div class="philo-item"><span class="philo-accent">›</span> Server is always truth. Client never handles damage, currency, or state.</div>
+        <div class="philo-item"><span class="philo-accent">›</span> One manager script orchestrates everything. All other systems are ModuleScripts.</div>
+        <div class="philo-item"><span class="philo-accent">›</span> Everything is validated. Rate limits, distance checks, timestamp windows on every RemoteEvent.</div>
+        <div class="philo-item"><span class="philo-accent">›</span> Clean disconnections. Every event and task gets cleaned up when no longer needed.</div>
+        <div class="philo-item"><span class="philo-accent">›</span> No wait(). No spawn(). Always task.wait(), task.spawn(), task.defer().</div>
+      </div>
+    </div>
+
+    <div>
+      <div class="about-block-label">What I can build</div>
+      <div class="skill-table">
+        <div class="skill-row-a"><span class="sk-name">Combat</span><span class="sk-detail">Combos, blocking, i-frames, ragdolls, hitboxes, stunlock</span></div>
+        <div class="skill-row-a"><span class="sk-name">Movement</span><span class="sk-detail">Dash, double jump, slide, vault, momentum, custom anims</span></div>
+        <div class="skill-row-a"><span class="sk-name">Security</span><span class="sk-detail">Anti-exploit, remote validation, rate limiting</span></div>
+        <div class="skill-row-a"><span class="sk-name">AI / NPC</span><span class="sk-detail">Pathfinding, awareness, flanking, dynamic threat logic</span></div>
+        <div class="skill-row-a"><span class="sk-name">Game systems</span><span class="sk-detail">Map rotation, objectives, stamina, QTE, leaderboards</span></div>
+        <div class="skill-row-a"><span class="sk-name">DataStore</span><span class="sk-detail">Save/load with retry logic, error handling, safe defaults</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-block-label">Architecture sample — how my modules talk</div>
+  <div class="code-header">
+    <div class="code-filename"><div class="code-dot"></div><span>CombatManager.lua (Server)</span></div>
+    <div class="code-lang">luau</div>
+  </div>
+  <pre><span class="cm">-- CombatManager is the only script that touches damage logic.</span>
+<span class="cm">-- All other systems go through it via ModuleScript calls, never directly.</span>
+
+<span class="ck">local</span> <span class="co">CombatManager</span> <span class="ck">=</span> {}
+
+<span class="ck">local</span> <span class="co">HitboxService</span>  <span class="ck">=</span> <span class="cf">require</span>(<span class="co">ServerModules</span>.<span class="co">HitboxService</span>)
+<span class="ck">local</span> <span class="co">IFrameService</span>  <span class="ck">=</span> <span class="cf">require</span>(<span class="co">ServerModules</span>.<span class="co">IFrameService</span>)
+<span class="ck">local</span> <span class="co">StunService</span>    <span class="ck">=</span> <span class="cf">require</span>(<span class="co">ServerModules</span>.<span class="co">StunService</span>)
+<span class="ck">local</span> <span class="co">RagdollService</span> <span class="ck">=</span> <span class="cf">require</span>(<span class="co">ServerModules</span>.<span class="co">RagdollService</span>)
+
+<span class="ck">local</span> <span class="co">MAX_REACH</span>      <span class="ck">=</span> <span class="cn">9</span>
+<span class="ck">local</span> <span class="co">LATENCY_BUFFER</span> <span class="ck">=</span> <span class="cn">0.35</span>
+<span class="ck">local</span> <span class="co">RATE_WINDOW</span>    <span class="ck">=</span> <span class="cn">0.4</span>
+
+<span class="ck">local</span> <span class="co">hitTimestamps</span>  <span class="ck">=</span> {}
+
+<span class="ck">local function</span> <span class="cf">isRateLimited</span>(player)
+  <span class="ck">local</span> <span class="co">now</span>  <span class="ck">=</span> <span class="cf">os.clock</span>()
+  <span class="ck">local</span> <span class="co">last</span> <span class="ck">=</span> <span class="co">hitTimestamps</span>[player] <span class="ck">or</span> <span class="cn">0</span>
+  <span class="ck">if</span> <span class="co">now</span> <span class="ck">-</span> <span class="co">last</span> <span class="ck">&lt;</span> <span class="co">RATE_WINDOW</span> <span class="ck">then return</span> <span class="ck">true</span> <span class="ck">end</span>
+  <span class="co">hitTimestamps</span>[player] <span class="ck">=</span> <span class="co">now</span>
+  <span class="ck">return false</span>
+<span class="ck">end</span>
+
+<span class="ck">local function</span> <span class="cf">validateHit</span>(attacker, hitData)
+  <span class="ck">local</span> <span class="co">root</span> <span class="ck">=</span> attacker.Character<span class="ck">?</span>.<span class="co">HumanoidRootPart</span>
+  <span class="ck">if not</span> <span class="co">root</span> <span class="ck">then return false</span> <span class="ck">end</span>
+
+  <span class="ck">local</span> <span class="co">dist</span> <span class="ck">=</span> (<span class="co">root</span>.Position <span class="ck">-</span> hitData.origin).Magnitude
+  <span class="ck">if</span> <span class="co">dist</span> <span class="ck">&gt;</span> <span class="co">MAX_REACH</span> <span class="ck">then return false</span> <span class="ck">end</span>
+
+  <span class="ck">if</span> <span class="cf">os.clock</span>() <span class="ck">-</span> hitData.timestamp <span class="ck">&gt;</span> <span class="co">LATENCY_BUFFER</span> <span class="ck">then return false</span> <span class="ck">end</span>
+
+  <span class="ck">return true</span>
+<span class="ck">end</span>
+
+<span class="ck">function</span> <span class="co">CombatManager</span>.<span class="cf">ProcessHit</span>(attacker, target, hitData)
+  <span class="ck">if</span> <span class="cf">isRateLimited</span>(attacker) <span class="ck">then return</span> <span class="ck">end</span>
+  <span class="ck">if not</span> <span class="cf">validateHit</span>(attacker, hitData) <span class="ck">then return</span> <span class="ck">end</span>
+  <span class="ck">if</span> <span class="co">IFrameService</span>.<span class="cf">IsInvincible</span>(target) <span class="ck">then return</span> <span class="ck">end</span>
+
+  <span class="ck">local</span> <span class="co">dmg</span> <span class="ck">=</span> hitData.damage
+  target.Character.Humanoid.Health <span class="ck">-=</span> <span class="co">dmg</span>
+
+  <span class="co">StunService</span>.<span class="cf">Apply</span>(target, hitData.stunDuration)
+
+  <span class="ck">if</span> target.Character.Humanoid.Health <span class="ck">&lt;=</span> <span class="cn">0</span> <span class="ck">then</span>
+    <span class="co">RagdollService</span>.<span class="cf">Apply</span>(target, <span class="cn">3</span>)
+  <span class="ck">end</span>
+<span class="ck">end</span>
+
+<span class="ck">return</span> <span class="co">CombatManager</span></pre>
+
+  <div class="about-projects-link" id="aboutToResults">
+    <div>
+      <div class="apl-text">Browse all projects</div>
+      <div class="apl-sub">See everything I've shipped — with full breakdowns</div>
+    </div>
+    <div class="apl-arrow">→</div>
+  </div>
+
+  <div class="contact-row">
+    <a href="#" class="contact-btn">Discord — nyeowie</a>
+    <a href="https://www.roblox.com/users/1608393063/profile" target="_blank" class="contact-btn">Roblox Profile ↗</a>
+  </div>
+</div>
+
+<script>
+const PROJECTS = {
+  battlegrounds: {
+    name: "Battlegrounds Game",
+    glyph: "COMBAT_ENGINE\nv1.0.0 — solo build",
+    desc: "A full combat engine built entirely by myself. Server handles all damage, hitboxes are validated per-frame with distance and latency checks, i-frames are tracked server-side so no amount of client manipulation can bypass them. The skill system runs as a ModuleScript per skill, loaded at runtime — adding a new skill is one file, not ten.",
+    longDesc: "...",
+    tags: ["CombatServer", "HitboxService", "IFrameService", "RagdollService", "StunlockService", "SkillSystem", "DashSystem"],
+    systems: ["CombatManager — server-authoritative damage pipeline", "HitboxService — frame-accurate hit validation with reach + latency checks", "IFrameService — invincibility frame state tracking (server)", "RagdollService — physics-based ragdoll on death or heavy stagger", "StunlockService — stun duration management and interrupt logic", "SkillSystem — per-skill ModuleScripts loaded dynamically at runtime", "DashSystem — directional dash with configurable i-frame windows"],
+    categories: ["debug", "backend", "expand", "combat", "all"],
+    file: "HitboxService.lua",
+    code: `<span class="ck">local</span> <span class="co">HitboxService</span> <span class="ck">=</span> {}
+
+<span class="ck">local</span> <span class="co">MAX_REACH</span>      <span class="ck">=</span> <span class="cn">9</span>
+<span class="ck">local</span> <span class="co">LATENCY_BUFFER</span> <span class="ck">=</span> <span class="cn">0.35</span>
+<span class="ck">local</span> <span class="co">TOLERANCE</span>      <span class="ck">=</span> <span class="cn">1.5</span>
+
+<span class="ck">function</span> <span class="co">HitboxService</span>.<span class="cf">Validate</span>(attacker, hitData)
+  <span class="ck">local</span> <span class="co">char</span> <span class="ck">=</span> attacker.Character
+  <span class="ck">if not</span> <span class="co">char</span> <span class="ck">then return false</span> <span class="ck">end</span>
+
+  <span class="ck">local</span> <span class="co">root</span> <span class="ck">=</span> <span class="co">char</span>.<span class="co">HumanoidRootPart</span>
+  <span class="ck">if not</span> <span class="co">root</span> <span class="ck">then return false</span> <span class="ck">end</span>
+
+  <span class="ck">local</span> <span class="co">dist</span> <span class="ck">=</span> (<span class="co">root</span>.Position <span class="ck">-</span> hitData.origin).Magnitude
+  <span class="ck">if</span> <span class="co">dist</span> <span class="ck">&gt;</span> <span class="co">MAX_REACH</span> <span class="ck">+</span> <span class="co">TOLERANCE</span> <span class="ck">then</span>
+    <span class="ck">return false</span>
+  <span class="ck">end</span>
+
+  <span class="ck">if</span> <span class="cf">os.clock</span>() <span class="ck">-</span> hitData.timestamp <span class="ck">&gt;</span> <span class="co">LATENCY_BUFFER</span> <span class="ck">then</span>
+    <span class="ck">return false</span>
+  <span class="ck">end</span>
+
+  <span class="ck">return true</span>
+<span class="ck">end</span>
+
+<span class="ck">return</span> <span class="co">HitboxService</span>`
+  },
+
+  tower: {
+    name: "Tower Defense Template",
+    glyph: "TOWER_DEFENSE\nbuilt in 2hrs",
+    desc: "Built in two hours flat. Waypoint-based pathfinding for enemies, grid-snapped tower placement, an inventory with randomized tower drops on wave completion, and a wave manager that scales difficulty. Wrote every line clean with no plugins or premade modules.",
+    tags: ["Pathfinding", "Tower Placement", "Inventory", "Wave Manager", "Randomized Drops"],
+    systems: ["EnemyPathfinder — waypoint chain walker with per-unit speed variance", "TowerPlacer — grid-snapped placement with rotation and collision checking", "InventoryService — randomized tower drops with rarity weights", "WaveManager — configurable wave config table, spawns on timer with difficulty scaling", "GameLoop — round state machine (Lobby → Wave → End → Lobby)"],
+    categories: ["debug", "backend", "expand", "systems", "all"],
+    file: "WaveManager.lua",
+    code: `<span class="ck">local</span> <span class="co">WaveManager</span> <span class="ck">=</span> {}
+
+<span class="ck">local</span> <span class="co">RunService</span>  <span class="ck">=</span> <span class="cf">game</span>:<span class="cf">GetService</span>(<span class="cs">"RunService"</span>)
+<span class="ck">local</span> <span class="co">EnemySpawner</span> <span class="ck">=</span> <span class="cf">require</span>(<span class="co">Modules</span>.<span class="co">EnemySpawner</span>)
+
+<span class="ck">local</span> <span class="co">WAVE_CONFIG</span> <span class="ck">=</span> {
+  { enemies <span class="ck">=</span> <span class="cn">10</span>, interval <span class="ck">=</span> <span class="cn">1.2</span>, speed <span class="ck">=</span> <span class="cn">12</span> },
+  { enemies <span class="ck">=</span> <span class="cn">20</span>, interval <span class="ck">=</span> <span class="cn">0.9</span>, speed <span class="ck">=</span> <span class="cn">14</span> },
+  { enemies <span class="ck">=</span> <span class="cn">35</span>, interval <span class="ck">=</span> <span class="cn">0.6</span>, speed <span class="ck">=</span> <span class="cn">16</span> },
+}
+
+<span class="ck">local</span> <span class="co">currentWave</span> <span class="ck">=</span> <span class="cn">0</span>
+<span class="ck">local</span> <span class="co">waveTask</span>    <span class="ck">=</span> <span class="ck">nil</span>
+
+<span class="ck">function</span> <span class="co">WaveManager</span>.<span class="cf">StartWave</span>()
+  <span class="co">currentWave</span> <span class="ck">+=</span> <span class="cn">1</span>
+  <span class="ck">local</span> <span class="co">cfg</span> <span class="ck">=</span> <span class="co">WAVE_CONFIG</span>[<span class="co">currentWave</span>]
+    <span class="ck">or</span> { enemies <span class="ck">=</span> <span class="co">WAVE_CONFIG</span>[<span class="ck">#</span><span class="co">WAVE_CONFIG</span>].enemies <span class="ck">+</span> <span class="co">currentWave</span> <span class="ck">*</span> <span class="cn">5</span>,
+         interval <span class="ck">=</span> <span class="cn">0.4</span>, speed <span class="ck">=</span> <span class="cn">18</span> }
+
+  <span class="ck">local</span> <span class="co">spawned</span> <span class="ck">=</span> <span class="cn">0</span>
+
+  <span class="co">waveTask</span> <span class="ck">=</span> <span class="cf">task.spawn</span>(<span class="ck">function</span>()
+    <span class="ck">while</span> <span class="co">spawned</span> <span class="ck">&lt;</span> <span class="co">cfg</span>.enemies <span class="ck">do</span>
+      <span class="co">EnemySpawner</span>.<span class="cf">Spawn</span>({ speed <span class="ck">=</span> <span class="co">cfg</span>.speed })
+      <span class="co">spawned</span> <span class="ck">+=</span> <span class="cn">1</span>
+      <span class="cf">task.wait</span>(<span class="co">cfg</span>.interval)
+    <span class="ck">end</span>
+  <span class="ck">end</span>)
+<span class="ck">end</span>
+
+<span class="ck">function</span> <span class="co">WaveManager</span>.<span class="cf">Stop</span>()
+  <span class="ck">if</span> <span class="co">waveTask</span> <span class="ck">then</span>
+    <span class="cf">task.cancel</span>(<span class="co">waveTask</span>)
+    <span class="co">waveTask</span> <span class="ck">=</span> <span class="ck">nil</span>
+  <span class="ck">end</span>
+<span class="ck">end</span>
+
+<span class="ck">return</span> <span class="co">WaveManager</span>`
+  },
+
+  unstable: {
+    name: "Unstable Session",
+    glyph: "HORROR_SURVIVAL\nold roblox aesthetic",
+    desc: "Horror survival with the classic old Roblox art style. Map rotation cycles through multiple handcrafted maps. View locks into first-person when a round starts and snaps back to third-person in the lobby. The QTE system intercepts user input on a tight window — miss it and your character fails the action. Leaderboard has clickable profile icons.",
+    tags: ["Map Rotation", "Objective System", "QTE", "Stamina", "View Lock", "Leaderboard"],
+    systems: ["MapRotation — server-controlled map cycling with pre-load and cleanup", "ObjectiveTracker — per-round objectives with progress sync to all clients", "QTEService — input-capture with configurable timing windows and fail states", "StaminaModule — drain/regen loop with sprint multiplier and out-of-breath stagger", "ViewLocker — camera mode transitions (first ↔ third) tied to round state", "Leaderboard — live-updating board with clickable player icons"],
+    categories: ["debug", "expand", "systems", "all"],
+    file: "QTEService.lua",
+    code: `<span class="ck">local</span> <span class="co">QTEService</span> <span class="ck">=</span> {}
+
+<span class="ck">local</span> <span class="co">UIS</span>        <span class="ck">=</span> <span class="cf">game</span>:<span class="cf">GetService</span>(<span class="cs">"UserInputService"</span>)
+<span class="ck">local</span> <span class="co">Remotes</span>    <span class="ck">=</span> <span class="cf">game</span>.<span class="co">ReplicatedStorage</span>:<span class="cf">WaitForChild</span>(<span class="cs">"Remotes"</span>)
+<span class="ck">local</span> <span class="co">QTEPrompt</span>  <span class="ck">=</span> <span class="co">Remotes</span>:<span class="cf">WaitForChild</span>(<span class="cs">"QTEPrompt"</span>)
+<span class="ck">local</span> <span class="co">QTEResult</span>  <span class="ck">=</span> <span class="co">Remotes</span>:<span class="cf">WaitForChild</span>(<span class="cs">"QTEResult"</span>)
+
+<span class="ck">local</span> <span class="co">connection</span> <span class="ck">=</span> <span class="ck">nil</span>
+
+<span class="ck">local function</span> <span class="cf">cleanup</span>()
+  <span class="ck">if</span> <span class="co">connection</span> <span class="ck">then</span>
+    <span class="co">connection</span>:<span class="cf">Disconnect</span>()
+    <span class="co">connection</span> <span class="ck">=</span> <span class="ck">nil</span>
+  <span class="ck">end</span>
+<span class="ck">end</span>
+
+<span class="co">QTEPrompt</span>.OnClientEvent:<span class="cf">Connect</span>(<span class="ck">function</span>(keyCode, windowMs)
+  <span class="cf">cleanup</span>()
+
+  <span class="ck">local</span> <span class="co">deadline</span> <span class="ck">=</span> <span class="cf">os.clock</span>() <span class="ck">+</span> (windowMs <span class="ck">/</span> <span class="cn">1000</span>)
+  <span class="ck">local</span> <span class="co">passed</span>   <span class="ck">=</span> <span class="ck">false</span>
+
+  <span class="co">connection</span> <span class="ck">=</span> <span class="co">UIS</span>.InputBegan:<span class="cf">Connect</span>(<span class="ck">function</span>(input, gpe)
+    <span class="ck">if</span> <span class="co">gpe</span> <span class="ck">then return</span> <span class="ck">end</span>
+    <span class="ck">if</span> input.KeyCode <span class="ck">~=</span> keyCode <span class="ck">then return</span> <span class="ck">end</span>
+    <span class="ck">if</span> <span class="cf">os.clock</span>() <span class="ck">&gt;</span> <span class="co">deadline</span> <span class="ck">then return</span> <span class="ck">end</span>
+
+    <span class="co">passed</span> <span class="ck">=</span> <span class="ck">true</span>
+    <span class="cf">cleanup</span>()
+    <span class="co">QTEResult</span>:<span class="cf">FireServer</span>(<span class="ck">true</span>)
+  <span class="ck">end</span>)
+
+  <span class="cf">task.delay</span>(windowMs <span class="ck">/</span> <span class="cn">1000</span>, <span class="ck">function</span>()
+    <span class="cf">cleanup</span>()
+    <span class="ck">if not</span> <span class="co">passed</span> <span class="ck">then</span>
+      <span class="co">QTEResult</span>:<span class="cf">FireServer</span>(<span class="ck">false</span>)
+    <span class="ck">end</span>
+  <span class="ck">end</span>)
+<span class="ck">end</span>)
+
+<span class="ck">return</span> <span class="co">QTEService</span>`
+  },
+
+  decay: {
+    name: "DECAY",
+    glyph: "ZOMBIE_SURVIVAL\nnoise-aware AI",
+    desc: "Zombie survival where the AI actually thinks. Instead of straight-line chasing, each zombie evaluates approach angles to cut off your movement path. The noise-based awareness system means sprinting is a threat — make too much sound and nearby zombies shift from patrol to hunt mode. Crouch and prone mechanics feed directly into noise output.",
+    tags: ["Zombie AI", "Awareness System", "Anti-Flank Logic", "Crouch / Prone", "Stamina"],
+    systems: ["ZombieController — per-zombie state machine (Patrol → Alert → Hunt → Chase)", "AwarenessSystem — noise output from player actions, decays over time, aggregated per zone", "PathSolver — angle-cutting pathfinding that predicts player movement to block escape routes", "MovementState — crouch and prone with noise multipliers and speed modifiers", "StaminaModule — sprint drain with out-of-breath stagger tied into noise output"],
+    categories: ["debug", "expand", "ai", "all"],
+    file: "AwarenessSystem.lua",
+    code: `<span class="ck">local</span> <span class="co">AwarenessSystem</span> <span class="ck">=</span> {}
+
+<span class="ck">local</span> <span class="co">NOISE_DECAY_RATE</span>  <span class="ck">=</span> <span class="cn">0.8</span>
+<span class="ck">local</span> <span class="co">ALERT_THRESHOLD</span>  <span class="ck">=</span> <span class="cn">60</span>
+<span class="ck">local</span> <span class="co">HUNT_THRESHOLD</span>   <span class="ck">=</span> <span class="cn">90</span>
+<span class="ck">local</span> <span class="co">HEARING_RADIUS</span>   <span class="ck">=</span> <span class="cn">55</span>
+
+<span class="ck">local</span> <span class="co">noiseMap</span>  <span class="ck">=</span> {}
+<span class="ck">local</span> <span class="co">listeners</span> <span class="ck">=</span> {}
+
+<span class="ck">local</span> <span class="co">NOISE_SOURCES</span> <span class="ck">=</span> {
+  Sprint  <span class="ck">=</span> <span class="cn">40</span>,
+  Walk    <span class="ck">=</span> <span class="cn">12</span>,
+  Crouch  <span class="ck">=</span> <span class="cn">4</span>,
+  Gunshot <span class="ck">=</span> <span class="cn">100</span>,
+  Land    <span class="ck">=</span> <span class="cn">25</span>,
+}
+
+<span class="ck">function</span> <span class="co">AwarenessSystem</span>.<span class="cf">Emit</span>(player, sourceType)
+  <span class="ck">local</span> <span class="co">base</span> <span class="ck">=</span> <span class="co">NOISE_SOURCES</span>[sourceType] <span class="ck">or</span> <span class="cn">0</span>
+  <span class="co">noiseMap</span>[player] <span class="ck">=</span> <span class="cf">math.min</span>((<span class="co">noiseMap</span>[player] <span class="ck">or</span> <span class="cn">0</span>) <span class="ck">+</span> <span class="co">base</span>, <span class="cn">100</span>)
+<span class="ck">end</span>
+
+<span class="ck">function</span> <span class="co">AwarenessSystem</span>.<span class="cf">GetNearbyThreat</span>(zombieRoot)
+  <span class="ck">local</span> <span class="co">bestPlayer</span>, <span class="co">bestScore</span> <span class="ck">=</span> <span class="ck">nil</span>, <span class="cn">0</span>
+
+  <span class="ck">for</span> player, noise <span class="ck">in</span> <span class="cf">pairs</span>(<span class="co">noiseMap</span>) <span class="ck">do</span>
+    <span class="ck">local</span> <span class="co">char</span> <span class="ck">=</span> player.Character
+    <span class="ck">if not</span> <span class="co">char</span> <span class="ck">then continue</span> <span class="ck">end</span>
+
+    <span class="ck">local</span> <span class="co">root</span> <span class="ck">=</span> <span class="co">char</span>.<span class="co">HumanoidRootPart</span>
+    <span class="ck">if not</span> <span class="co">root</span> <span class="ck">then continue</span> <span class="ck">end</span>
+
+    <span class="ck">local</span> <span class="co">dist</span>  <span class="ck">=</span> (<span class="co">root</span>.Position <span class="ck">-</span> zombieRoot.Position).Magnitude
+    <span class="ck">if</span> <span class="co">dist</span> <span class="ck">&gt;</span> <span class="co">HEARING_RADIUS</span> <span class="ck">then continue</span> <span class="ck">end</span>
+
+    <span class="ck">local</span> <span class="co">falloff</span> <span class="ck">=</span> <span class="cn">1</span> <span class="ck">-</span> (<span class="co">dist</span> <span class="ck">/</span> <span class="co">HEARING_RADIUS</span>)
+    <span class="ck">local</span> <span class="co">score</span>   <span class="ck">=</span> <span class="co">noise</span> <span class="ck">*</span> <span class="co">falloff</span>
+
+    <span class="ck">if</span> <span class="co">score</span> <span class="ck">&gt;</span> <span class="co">bestScore</span> <span class="ck">then</span>
+      <span class="co">bestPlayer</span>, <span class="co">bestScore</span> <span class="ck">=</span> player, score
+    <span class="ck">end</span>
+  <span class="ck">end</span>
+
+  <span class="ck">if</span> <span class="co">bestScore</span> <span class="ck">&gt;=</span> <span class="co">HUNT_THRESHOLD</span>  <span class="ck">then return</span> <span class="cs">"Hunt"</span>,  <span class="co">bestPlayer</span> <span class="ck">end</span>
+  <span class="ck">if</span> <span class="co">bestScore</span> <span class="ck">&gt;=</span> <span class="co">ALERT_THRESHOLD</span> <span class="ck">then return</span> <span class="cs">"Alert"</span>, <span class="co">bestPlayer</span> <span class="ck">end</span>
+  <span class="ck">return</span> <span class="cs">"Patrol"</span>, <span class="ck">nil</span>
+<span class="ck">end</span>
+
+<span class="cf">task.spawn</span>(<span class="ck">function</span>()
+  <span class="ck">while true</span> <span class="ck">do</span>
+    <span class="cf">task.wait</span>(<span class="cn">1</span>)
+    <span class="ck">for</span> player, noise <span class="ck">in</span> <span class="cf">pairs</span>(<span class="co">noiseMap</span>) <span class="ck">do</span>
+      <span class="co">noiseMap</span>[player] <span class="ck">=</span> <span class="cf">math.max</span>(<span class="co">noise</span> <span class="ck">-</span> <span class="co">NOISE_DECAY_RATE</span> <span class="ck">*</span> <span class="cn">10</span>, <span class="cn">0</span>)
+    <span class="ck">end</span>
+  <span class="ck">end</span>
+<span class="ck">end</span>)
+
+<span class="ck">return</span> <span class="co">AwarenessSystem</span>`
+  }
+};
+
+const INTENT_MAP = {
+  debug:   { label: "Debugging & fixes", heading: "I've worked on and fixed systems like these.", sub: "Every project below was built and debugged solo. I can get into your code and do the same.", keys: ["battlegrounds","tower","unstable","decay"] },
+  backend: { label: "Backend systems",   heading: "Server-side is where I live.", sub: "Here's how I handle remote validation, DataStore, and keeping clients from touching anything they shouldn't.", keys: ["battlegrounds","tower"] },
+  expand:  { label: "Expanding systems", heading: "I build iteratively and keep it clean.", sub: "All of these started small and grew. Expanding existing code is most of what I do.", keys: ["battlegrounds","tower","unstable","decay"] },
+  combat:  { label: "Combat & movement", heading: "Combat is my strongest area.", sub: "I built a full engine from scratch — server-authoritative, modular, and exploit-resistant.", keys: ["battlegrounds"] },
+  ai:      { label: "NPC & AI systems",  heading: "NPCs that actually think.", sub: "DECAY's zombie AI goes well beyond basic pathfinding. Here's what I built.", keys: ["decay","battlegrounds"] },
+  all:     null,
+};
+
+let currentIntent = null;
+let currentProjectKey = null;
+let prevResultsView = "results";
+
+function showView(id, direction = "up") {
+  const views = document.querySelectorAll('.view');
+  views.forEach(v => {
+    if (v.classList.contains('active')) {
+      v.classList.remove('active');
+      v.classList.add(direction === "up" ? 'exit-up' : 'exit-down');
+      setTimeout(() => v.classList.remove('exit-up', 'exit-down'), 500);
+    }
+  });
+  const next = document.getElementById(id);
+  setTimeout(() => {
+    next.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, 80);
+  updateDots(id);
+}
+
+function updateDots(viewId) {
+  const dots = document.querySelectorAll('.nav-dot');
+  const navEl = document.getElementById('navDots');
+  dots.forEach(d => d.classList.remove('active'));
+  const active = document.querySelector(`.nav-dot[data-view="${viewId}"]`)
+    || document.querySelector(`.nav-dot[data-view="results"]`);
+  if (active) active.classList.add('active');
+  navEl.classList.toggle('visible', viewId !== 'view-intro');
+}
+
+function populateResults(intentKey) {
+  const intent = INTENT_MAP[intentKey];
+  document.getElementById('resultsLabel').textContent = intent.label;
+  document.getElementById('resultsHeading').innerHTML = intent.heading;
+  document.getElementById('resultsSub').textContent = intent.sub;
+  const grid = document.getElementById('projGrid');
+  grid.innerHTML = '';
+  intent.keys.forEach((key, i) => {
+    const p = PROJECTS[key];
+    const card = document.createElement('div');
+    card.className = 'proj-card';
+    card.innerHTML = `
+      <div class="proj-num">${String(i+1).padStart(2,'0')}</div>
+      <div class="proj-visual">
+        <div class="proj-visual-bg"></div>
+        <div class="proj-visual-inner">
+          <div class="proj-glyph">${p.glyph}</div>
+        </div>
+      </div>
+      <div class="proj-name">${p.name}</div>
+      <div class="proj-desc">${p.desc.slice(0, 140)}...</div>
+      <div class="proj-tags">${p.tags.map(t => `<span class="proj-tag">${t}</span>`).join('')}</div>
+      <div class="proj-card-arrow">↗</div>
+    `;
+    card.addEventListener('click', () => openDetail(key));
+    grid.appendChild(card);
+  });
+}
+
+function openDetail(key) {
+  const p = PROJECTS[key];
+  currentProjectKey = key;
+  document.getElementById('detailHeroLabel').textContent = p.name;
+  document.getElementById('detailHeroGlyph').textContent = p.glyph;
+  document.getElementById('detailName').textContent = p.name;
+  document.getElementById('detailDesc').textContent = p.desc;
+  document.getElementById('codeFilename').textContent = p.file;
+  document.getElementById('codeBlock').innerHTML = p.code;
+  const sys = document.getElementById('detailSystems');
+  sys.innerHTML = p.systems.map(s => `
+    <div class="sys-item">
+      <div class="sys-dot"></div>
+      <span>${s}</span>
+    </div>
+  `).join('');
+  showView('view-detail', 'up');
+}
+
+document.querySelectorAll('.q-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const intent = card.dataset.intent;
+    if (intent === 'all') {
+      showView('view-about');
+    } else {
+      currentIntent = intent;
+      populateResults(intent);
+      showView('view-results');
+    }
+  });
+});
+
+document.getElementById('resultsBack').addEventListener('click', () => {
+  showView('view-intro', 'down');
+  document.getElementById('navDots').classList.remove('visible');
+});
+
+document.getElementById('detailBack').addEventListener('click', () => {
+  showView('view-results', 'down');
+});
+
+document.getElementById('aboutBack').addEventListener('click', () => {
+  showView('view-intro', 'down');
+  document.getElementById('navDots').classList.remove('visible');
+});
+
+document.getElementById('aboutToResults').addEventListener('click', () => {
+  currentIntent = 'expand';
+  populateResults('expand');
+  showView('view-results');
+});
+
+document.querySelectorAll('.nav-dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    const view = dot.dataset.view;
+    if (view === 'intro') {
+      showView('view-intro', 'down');
+      document.getElementById('navDots').classList.remove('visible');
+    } else if (view === 'results') {
+      if (currentIntent) showView('view-results');
+    } else if (view === 'about') {
+      showView('view-about');
+    }
+  });
+});
+</script>
 </body>
 </html>
